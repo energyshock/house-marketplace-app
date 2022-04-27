@@ -1,5 +1,10 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
+
+// Setting up firebase emulator
+// https://www.udemy.com/course/react-front-to-back-2022/learn/lecture/29769062#questions/16613524
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,4 +18,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 initializeApp(firebaseConfig);
+
 export const db = getFirestore();
+export const auth = getAuth();
+const storage = getStorage();
+
+if (process.env.NODE_ENV !== 'production') {
+  connectFirestoreEmulator(db, 'localhost', 8080);
+  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectStorageEmulator(storage, 'localhost', 9199);
+}
