@@ -1,24 +1,28 @@
-import {useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
-import {getAuth, createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
-import {setDoc, doc, serverTimestamp} from 'firebase/firestore'
-import {db} from '../firebase.config'
-import {ReactComponent as ArrowRightIcon} from '../assets/svg/keyboardArrowRightIcon.svg'
-import visibilityIcon from '../assets/svg/visibilityIcon.svg'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase.config';
+import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg';
+import visibilityIcon from '../assets/svg/visibilityIcon.svg';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
-  })
+    password: '',
+  });
 
-  const {name, email, password} = formData;
+  const { name, email, password } = formData;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const onChange = (e) => {
+  const onChange = e => {
     // setFormData((prevState) => ({
     //   ...prevState,
     //   [e.target.id]: e.target.value,
@@ -26,24 +30,28 @@ function SignUp() {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
 
     try {
       const auth = getAuth();
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
       const user = userCredential.user;
 
       updateProfile(auth.currentUser, {
-        displayName: name
+        displayName: name,
       });
 
-      const formDataCopy = {...formData};
+      const formDataCopy = { ...formData };
       delete formDataCopy.password;
       formDataCopy.timestamp = serverTimestamp();
 
@@ -53,45 +61,73 @@ function SignUp() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
       <div className="pageContainer">
         <header>
-          <p className="pageHeader">
-            Welcome Back!
-          </p>
+          <p className="pageHeader">Welcome Back!</p>
         </header>
 
         <main>
           <form onSubmit={onSubmit}>
-            <input type="text" className="nameInput" placeholder='Name' id='name' value={name} onChange={onChange} />
+            <input
+              type="text"
+              className="nameInput"
+              placeholder="Name"
+              id="name"
+              value={name}
+              onChange={onChange}
+            />
 
-            <input type="email" className="emailInput" placeholder='Email' id='email' value={email} onChange={onChange} />
+            <input
+              type="email"
+              className="emailInput"
+              placeholder="Email"
+              id="email"
+              value={email}
+              onChange={onChange}
+            />
 
             <div className="passwordInputDiv">
-              <input type={showPassword ? 'text' : 'password'} className='passwordInput' placeholder='Password' id='password' value={password} onChange={onChange} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="passwordInput"
+                placeholder="Password"
+                id="password"
+                value={password}
+                onChange={onChange}
+              />
 
-              <img src={visibilityIcon} alt="show password" className="showPassword" onClick={() => setShowPassword((prevState) => !prevState)} />
+              <img
+                src={visibilityIcon}
+                alt="show password"
+                className="showPassword"
+                onClick={() => setShowPassword(prevState => !prevState)}
+              />
             </div>
 
-            <Link to='/forgot-password' className='forgotPasswordLink'>Forgot Password</Link>
+            <Link to="/forgot-password" className="forgotPasswordLink">
+              Forgot Password
+            </Link>
 
             <div className="signUpBar">
               <p className="signUpText">Sign Up</p>
               <button className="signUpButton">
-                <ArrowRightIcon fill='#ffffff' width='34px' height='34px' />
+                <ArrowRightIcon fill="#ffffff" width="34px" height="34px" />
               </button>
             </div>
           </form>
 
           {/* Google 0Auth */}
 
-          <Link to='/sign-in' className='registerLink'>Sign In Instead</Link>
+          <Link to="/sign-in" className="registerLink">
+            Sign In Instead
+          </Link>
         </main>
       </div>
     </>
-  )
+  );
 }
-export default SignUp
+export default SignUp;
