@@ -1,4 +1,4 @@
-import { getAuth, updateProfile } from 'firebase/auth';
+import { getAuth, updateEmail, updateProfile } from 'firebase/auth';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { db } from '../firebase.config';
@@ -25,7 +25,7 @@ function Profile() {
   const onSubmit = async () => {
     try {
       if (auth.currentUser.displayName !== name) {
-        // Update display name in fb
+        // Update display name in fb authentication
         await updateProfile(auth.currentUser, {
           displayName: name,
         });
@@ -36,6 +36,15 @@ function Profile() {
           name,
         });
       }
+      if (auth.currentUser.email !== email) {
+        await updateEmail(auth.currentUser, email);
+
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+        await updateDoc(userRef, {
+          email,
+        });
+      }
+      toast.success('Profile updated');
     } catch (error) {
       toast.error('Could not update profile details');
     }
