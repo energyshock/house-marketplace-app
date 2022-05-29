@@ -73,8 +73,9 @@ function Slider() {
               >
                 <p className="swiperSlideText">{data.name}</p>
                 <p className="swiperSlidePrice">
-                  {formatMoney(data.discountedPrice) ??
-                    formatMoney(data.regularPrice)}{' '}
+                  {data.discountedPrice === undefined || null
+                    ? formatMoney(data.regularPrice)
+                    : formatMoney(data.discountedPrice)}
                   {data.type === 'rent' && '/ month'}
                 </p>
               </div>

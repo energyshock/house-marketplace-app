@@ -13,6 +13,7 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../firebase.config';
 import Spinner from '../components/Spinner';
 import shareIcon from '../assets/svg/shareIcon.svg';
+import formatMoney from '../utils/formatMoney';
 
 function Listing() {
   const [listing, setListing] = useState(null);
@@ -82,12 +83,15 @@ function Listing() {
           {listing.name} - €{/* Alternative Intl API */}
           {/* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#examples */}
           {listing.offer
+            ? formatMoney(listing.discountedPrice)
+            : formatMoney(listing.regularPrice)}
+          {/* {listing.offer
             ? listing.discountedPrice
                 .toString()
                 .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
             : listing.regularPrice
                 .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '} */}
         </p>
         <p className="listingLocation">{listing.location}</p>
         <p className="listingType">
